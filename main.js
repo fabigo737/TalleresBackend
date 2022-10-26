@@ -32,4 +32,33 @@ const orderbyreview = async () =>{
   return resultado
 }
 
-module.exports = {getBathrooms, get300, getNotSmoke, orderbyreview}
+const policy = async () =>{
+  const database = client.db('sample_airbnb');
+  const reviews = database.collection('listingsAndReviews')
+  const consulta = { $or: [ {"cancellation_policy" : "moderate"}, {"cancellation_policy" : "flexible"} ] }
+  const resultado = await reviews.find(consulta).limit(100).toArray()
+  return resultado
+}
+
+//Crear una API que traiga los resultados que tengan 6 camas y 6 habitaciones.
+const bedrooms = async () =>{
+  const database = client.db('sample_airbnb');
+  const reviews = database.collection('listingsAndReviews')
+  const consulta = { $and: [ {"beds" : 6}, {"bedrooms" : 6} ] }
+  const resultado = await reviews.find(consulta).toArray()
+  return resultado
+}
+
+//Crear una API que reciba como parámetro URL cualquier precio y traer los documentos 
+//correspondientes que sean iguales a ese precio, utilizar método GET. 
+
+const userfilterprice = async (valoruser) =>{
+  const database = client.db('sample_airbnb');
+  const reviews = database.collection('listingsAndReviews')
+  const consulta = { price: valoruser }
+  const resultado = await reviews.find(valoruser).toArray()
+  return resultado
+}
+
+
+module.exports = {getBathrooms, get300, getNotSmoke, orderbyreview, policy, userfilterprice}
